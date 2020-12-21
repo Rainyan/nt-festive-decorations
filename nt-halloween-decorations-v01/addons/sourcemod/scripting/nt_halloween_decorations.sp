@@ -340,7 +340,7 @@ public Plugin myinfo = {
 	description = "Spawn client-side festive objects in the maps.",
 	author = "Rain",
 	version = PLUGIN_VERSION,
-	url = ""
+	url = "https://github.com/Rainyan/nt-festive-decorations"
 };
 
 public void OnPluginStart()
