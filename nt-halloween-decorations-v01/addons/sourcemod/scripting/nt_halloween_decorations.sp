@@ -1,10 +1,27 @@
 #pragma semicolon 1
 
+/* TODO FOR FUTURE:
+	- Replay bot doesn't see decorations being cleared on new round start;
+	should only spawn the pre-placed decorations for the replay, and not client spawned ones,
+	otherwise replays playback for those demos can become very heavy.
+	
+	- Fix pumpkin UVs such that it self illuminates (black.vmt or similar, see assets).
+	
+	- Refactor location data out of code and into a config file for easier location updates.
+	Same with decoration types and other extendable things that are currently hardcoded constant.
+	
+	- Make plugin public. Need to discuss pumpkin copyright (some compatible CC license?)
+	
+	- TE lights actually do not persist (lasts 25 secs or so?), so can remove the cvar time calculations.
+	And just rely on the Cmd_ReLightDecorations repeat timer.
+*/
+
 #include <sourcemod>
 #include <sdktools>
 #include <sdktools_tempents>
+#include <neotokyo>
 
-#define PLUGIN_VERSION "0.1"
+#define PLUGIN_VERSION "0.3"
 
 // How many maps are locations defined for
 #define NUM_MAPS 10
@@ -24,6 +41,8 @@
 
 #define MAX_TE_LIGHT_DURATION 25.0
 #define TIMER_INACCURACY 0.1
+
+#define NEO_MAX_PLAYERS 32
 
 static float _vec3_zero[3] = { 0.0, 0.0, 0.0 };
 
@@ -311,7 +330,10 @@ static float _mapPropPositions[NUM_MAPS][NUM_LOCATIONS][LOCATION_SIZE][3] = {
 };
 static int _currentMapIndex;
 
-ConVar g_hCvar_Timelimit = null, g_hCvar_Scorelimit = null, g_hCvar_Chattime = null;
+ConVar g_hCvar_Timelimit = null, g_hCvar_Scorelimit = null, g_hCvar_Chattime = null,
+	g_hCvar_MaxDecorations = null, g_hCvar_SpecsCanSpawnDecorations;
+
+static int _numPerPlayer[NEO_MAX_PLAYERS + 1];
 
 public Plugin myinfo = {
 	name = "NT Halloween Decorations",
@@ -328,12 +350,35 @@ public void OnPluginStart()
 	}
 	
 	RegConsoleCmd("sm_pumpkin", Cmd_SpawnPumpkin);
+	
+	CreateConVar("sm_festive_decorations_version", PLUGIN_VERSION, "Plugin version.",
+		FCVAR_DONTRECORD);
+	
+	g_hCvar_MaxDecorations = CreateConVar("sm_festive_decorations_limit", "20",
+		"How many !pumpkins per person per round max.", _, true, 0.0, true, 1000.0);
+	
+	g_hCvar_SpecsCanSpawnDecorations = CreateConVar("sm_festive_decorations_specs_may_spawn", "2",
+		"Whether spectators are allowed to !pumpkin.", _, true, 0.0, true, 2.0);
 }
 
 public Action Cmd_SpawnPumpkin(int client, int argc)
 {
 	if (client == 0) {
 		ReplyToCommand(client, "This command cannot be executed by the server.");
+		return Plugin_Handled;
+	}
+	
+	int team = GetClientTeam(client);
+	bool is_speccing = g_hCvar_SpecsCanSpawnDecorations.IntValue == 1 ? false : (team <= TEAM_SPECTATOR || !IsPlayerAlive(client));
+	
+	if (g_hCvar_SpecsCanSpawnDecorations.IntValue == 0 && is_speccing) {
+		PrintToChat(client, "[SM] Spectating players may not spawn pumpkins!");
+		return Plugin_Handled;
+	}
+	
+	if (_numPerPlayer[client] >= g_hCvar_MaxDecorations.IntValue) {
+		PrintToChat(client, "[SM] You can only spawn %d pumpkins per round!",
+			g_hCvar_MaxDecorations.IntValue);
 		return Plugin_Handled;
 	}
 	
@@ -346,7 +391,9 @@ public Action Cmd_SpawnPumpkin(int client, int argc)
 		RayType_Infinite, NotHitSelf, client);
 	TR_GetEndPosition(trace_end_pos, INVALID_HANDLE);
 	
-	SpawnDecoration(trace_end_pos, eye_ang);
+	SpawnDecoration(trace_end_pos, eye_ang, is_speccing);
+	
+	++_numPerPlayer[client];
 	
 	return Plugin_Handled;
 }
@@ -356,7 +403,7 @@ bool NotHitSelf(int hitEntity, int contentsMask, int selfEntity)
 	return hitEntity != selfEntity;	
 }
 
-void SpawnDecoration(const float[3] pos, const float[3] ang)
+void SpawnDecoration(const float[3] pos, const float[3] ang, const bool for_spectators_only = false)
 {
 	TE_Start("physicsprop");
 	TE_WriteVector("m_vecOrigin", pos);
@@ -366,7 +413,20 @@ void SpawnDecoration(const float[3] pos, const float[3] ang)
 	TE_WriteVector("m_vecVelocity", _vec3_zero);
 	TE_WriteNum("m_nModelIndex", _model_indices[GetRandomInt(0, sizeof(_model_indices) - 1)]);
 	TE_WriteNum("m_nFlags", 0);
-	TE_SendToAll(0.0);
+	if (!for_spectators_only) {
+		TE_SendToAll(0.0);
+	} else {
+		int spectators[NEO_MAX_PLAYERS];
+		int num_spectators;
+		for (int client = 1; client <= MaxClients; ++client) {
+			if (IsClientInGame(client) && (!IsPlayerAlive(client) || GetClientTeam(client) <= TEAM_SPECTATOR)) {
+				spectators[num_spectators++] = client;
+			}
+		}
+		if (num_spectators != 0) {
+			TE_Send(spectators, num_spectators, 0.0);
+		}
+	}
 }
 
 public void OnMapStart()
@@ -458,6 +518,10 @@ void LightDecorationLocations()
 
 public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
+	for (int i = 0; i < sizeof(_numPerPlayer); ++i) {
+		_numPerPlayer[i] = 0;
+	}
+	
 	if (_currentMapIndex == -1) {
 		return;
 	}
