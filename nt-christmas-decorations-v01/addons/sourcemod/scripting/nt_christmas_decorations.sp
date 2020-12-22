@@ -486,6 +486,48 @@ bool VectorsEqual(const float[3] v1, const float[3] v2)
 	return v1[0] == v2[0] && v1[1] == v2[1] && v1[2] == v2[2];
 }
 
+int GetRandomColor_R()
+{
+	static int last_r = GetRandomInt(0, 255);
+	static int num_times_used = 0;
+	
+	++num_times_used;
+	if (num_times_used > 2) {
+		num_times_used = 0;
+		SetRandomSeed(GetGameTickCount() + 1);
+		last_r = GetRandomInt(0, 255);
+	}
+	return last_r;
+}
+
+int GetRandomColor_G()
+{
+	static int last_r = GetRandomInt(0, 255);
+	static int num_times_used = 0;
+	
+	++num_times_used;
+	if (num_times_used > 2) {
+		num_times_used = 0;
+		SetRandomSeed(GetGameTickCount() + 2);
+		last_r = GetRandomInt(0, 255);
+	}
+	return last_r;
+}
+
+int GetRandomColor_B()
+{
+	static int last_r = GetRandomInt(0, 255);
+	static int num_times_used = 0;
+	
+	++num_times_used;
+	if (num_times_used > 2) {
+		num_times_used = 0;
+		SetRandomSeed(GetGameTickCount() + 3);
+		last_r = GetRandomInt(0, 255);
+	}
+	return last_r;
+}
+
 void LightDecorationLocations()
 {
 	// Light all the decoration locations.
@@ -497,14 +539,9 @@ void LightDecorationLocations()
 		TE_Start("Dynamic Light");
 		TE_WriteVector("m_vecOrigin", _mapPropPositions[_currentMapIndex][location][LOCATION_POS]);
 		TE_WriteFloat("m_fRadius", 180.0);
-		
-		// Random color. Re-seeding for each random value since this happens in the same tick.
-		TE_WriteNum("r", GetRandomInt(0, 255));
-		SetRandomSeed(GetGameTickCount() + 1);
-		TE_WriteNum("g", GetRandomInt(0, 255));
-		SetRandomSeed(GetGameTickCount() + 2);
-		TE_WriteNum("b", GetRandomInt(0, 255));
-		
+		TE_WriteNum("r", GetRandomColor_R());
+		TE_WriteNum("g", GetRandomColor_G());
+		TE_WriteNum("b", GetRandomColor_B());
 		TE_WriteNum("exponent", 2);
 		// This timer will persist across newrounds, so setting to maximum map length for a standard CTG server setup.
 		TE_WriteFloat("m_fTime", (g_hCvar_Scorelimit.IntValue * 2 - 1) * (g_hCvar_Timelimit.FloatValue * 60 + g_hCvar_Chattime.FloatValue));
