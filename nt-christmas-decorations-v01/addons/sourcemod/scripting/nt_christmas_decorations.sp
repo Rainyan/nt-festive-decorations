@@ -327,7 +327,8 @@ static float _mapPropPositions[NUM_MAPS][NUM_LOCATIONS][LOCATION_SIZE][3] = {
 static int _currentMapIndex;
 
 ConVar g_hCvar_Timelimit = null, g_hCvar_Scorelimit = null, g_hCvar_Chattime = null,
-	g_hCvar_MaxDecorations = null, g_hCvar_SpecsCanSpawnDecorations;
+	g_hCvar_MaxDecorations = null, g_hCvar_SpecsCanSpawnDecorations,
+	g_hCvar_LightSwitchSpeed = null;
 
 static int _numPerPlayer[NEO_MAX_PLAYERS + 1];
 
@@ -350,6 +351,9 @@ public void OnPluginStart()
 	
 	CreateConVar("sm_festive_decorations_christmas_version", PLUGIN_VERSION, "Plugin version.",
 		FCVAR_DONTRECORD);
+	
+	g_hCvar_LightSwitchSpeed = CreateConVar("sm_festive_decorations_christmas_lightswitch_speed", "5", "How fast should randomly changing coloured lights change. Larger value means slower change of colors.",
+		_, true, 1.0, true, 100.0);
 	
 	g_hCvar_MaxDecorations = CreateConVar("sm_festive_decorations_christmas_limit", "20",
 		"How many !gifts per person per round max.", _, true, 0.0, true, 1000.0);
@@ -488,12 +492,12 @@ bool VectorsEqual(const float[3] v1, const float[3] v2)
 
 int GetRandomColor_R()
 {
-	static int last_r = GetRandomInt(0, 255);
-	static int num_times_used = 0;
+	static int last_r;
+	static int use_times;
 	
-	++num_times_used;
-	if (num_times_used > 2) {
-		num_times_used = 0;
+	--use_times;
+	if (use_times <= 0) {
+		use_times = g_hCvar_LightSwitchSpeed.IntValue;
 		SetRandomSeed(GetGameTickCount() + 1);
 		last_r = GetRandomInt(0, 255);
 	}
@@ -502,12 +506,12 @@ int GetRandomColor_R()
 
 int GetRandomColor_G()
 {
-	static int last_r = GetRandomInt(0, 255);
-	static int num_times_used = 0;
+	static int last_r;
+	static int use_times;
 	
-	++num_times_used;
-	if (num_times_used > 2) {
-		num_times_used = 0;
+	--use_times;
+	if (use_times <= 0) {
+		use_times = g_hCvar_LightSwitchSpeed.IntValue;
 		SetRandomSeed(GetGameTickCount() + 2);
 		last_r = GetRandomInt(0, 255);
 	}
@@ -516,12 +520,12 @@ int GetRandomColor_G()
 
 int GetRandomColor_B()
 {
-	static int last_r = GetRandomInt(0, 255);
-	static int num_times_used = 0;
+	static int last_r;
+	static int use_times;
 	
-	++num_times_used;
-	if (num_times_used > 2) {
-		num_times_used = 0;
+	--use_times;
+	if (use_times <= 0) {
+		use_times = g_hCvar_LightSwitchSpeed.IntValue;
 		SetRandomSeed(GetGameTickCount() + 3);
 		last_r = GetRandomInt(0, 255);
 	}
