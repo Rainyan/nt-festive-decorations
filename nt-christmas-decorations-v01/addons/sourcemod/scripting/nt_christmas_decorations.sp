@@ -56,7 +56,7 @@ static char _maps[NUM_MAPS][] = {
 };
 
 static char _models[NUM_MODELS][] = {
-	"models/holiday_decorations/christmas/gift",
+	"models/holiday_decorations/xmas/holidaybox",
 };
 static int _model_indices[NUM_MODELS];
 
@@ -442,11 +442,8 @@ public void OnMapStart()
 			AddFileToDownloadsTable(ext_path);
 		}
 	}
-	AddFileToDownloadsTable("materials/models/holiday_decorations/christmas/black.vmt");
-	AddFileToDownloadsTable("materials/models/holiday_decorations/christmas/green.vmt");
-	AddFileToDownloadsTable("materials/models/holiday_decorations/christmas/pumpkin.vmt");
-	AddFileToDownloadsTable("materials/models/holiday_decorations/christmas/pumpkin.vtf");
-	AddFileToDownloadsTable("materials/models/holiday_decorations/christmas/pumpkin_illum.vtf");
+	AddFileToDownloadsTable("materials/models/holiday_decorations/xmas/holidaybox.vmt");
+	AddFileToDownloadsTable("materials/models/holiday_decorations/xmas/holidaybox.vtf");
 	
 	decl String:map_name[PLATFORM_MAX_PATH];
 	GetCurrentMap(map_name, sizeof(map_name));
