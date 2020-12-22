@@ -1,10 +1,6 @@
 #pragma semicolon 1
 
 /* TODO FOR FUTURE:
-	- Replay bot doesn't see decorations being cleared on new round start;
-	should only spawn the pre-placed decorations for the replay, and not client spawned ones,
-	otherwise replays playback for those demos can become very heavy.
-	
 	- Refactor location data out of code and into a config file for easier location updates.
 	Same with decoration types and other extendable things that are currently hardcoded constant.
 	
@@ -415,12 +411,21 @@ void SpawnDecoration(const float[3] pos, const float[3] ang, const bool for_spec
 	TE_WriteNum("m_nModelIndex", _model_indices[GetRandomInt(0, sizeof(_model_indices) - 1)]);
 	TE_WriteNum("m_nFlags", 0);
 	if (!for_spectators_only) {
-		TE_SendToAll(0.0);
+		int recipients[NEO_MAX_PLAYERS];
+		int num_recipients;
+		for (int client = 1; client <= MaxClients; ++client) {
+			if (IsClientInGame(client) && !IsClientSourceTV(client) && !IsClientReplay(client)) {
+				recipients[num_recipients++] = client;
+			}
+		}
+		if (num_recipients != 0) {
+			TE_Send(recipients, num_recipients, 0.0);
+		}
 	} else {
 		int spectators[NEO_MAX_PLAYERS];
 		int num_spectators;
 		for (int client = 1; client <= MaxClients; ++client) {
-			if (IsClientInGame(client) && (!IsPlayerAlive(client) || GetClientTeam(client) <= TEAM_SPECTATOR)) {
+			if (IsClientInGame(client) && (!IsPlayerAlive(client) || GetClientTeam(client) <= TEAM_SPECTATOR) && !IsClientSourceTV(client) && !IsClientReplay(client)) {
 				spectators[num_spectators++] = client;
 			}
 		}
