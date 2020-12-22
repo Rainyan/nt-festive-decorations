@@ -497,9 +497,14 @@ void LightDecorationLocations()
 		TE_Start("Dynamic Light");
 		TE_WriteVector("m_vecOrigin", _mapPropPositions[_currentMapIndex][location][LOCATION_POS]);
 		TE_WriteFloat("m_fRadius", 180.0);
-		TE_WriteNum("r", 255);
-		TE_WriteNum("g", 100);
-		TE_WriteNum("b", 0);
+		
+		// Random color. Re-seeding for each random value since this happens in the same tick.
+		TE_WriteNum("r", GetRandomInt(0, 255));
+		SetRandomSeed(GetGameTickCount() + 1);
+		TE_WriteNum("g", GetRandomInt(0, 255));
+		SetRandomSeed(GetGameTickCount() + 2);
+		TE_WriteNum("b", GetRandomInt(0, 255));
+		
 		TE_WriteNum("exponent", 2);
 		// This timer will persist across newrounds, so setting to maximum map length for a standard CTG server setup.
 		TE_WriteFloat("m_fTime", (g_hCvar_Scorelimit.IntValue * 2 - 1) * (g_hCvar_Timelimit.FloatValue * 60 + g_hCvar_Chattime.FloatValue));
