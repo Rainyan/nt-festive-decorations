@@ -352,10 +352,10 @@ public void OnPluginStart()
 	CreateConVar("sm_festive_decorations_halloween_version", PLUGIN_VERSION, "Plugin version.",
 		FCVAR_DONTRECORD);
 	
-	g_hCvar_MaxDecorations = CreateConVar("sm_festive_decorations_limit", "20",
+	g_hCvar_MaxDecorations = CreateConVar("sm_festive_decorations_halloween_limit", "20",
 		"How many !pumpkins per person per round max.", _, true, 0.0, true, 1000.0);
 	
-	g_hCvar_SpecsCanSpawnDecorations = CreateConVar("sm_festive_decorations_specs_may_spawn", "2",
+	g_hCvar_SpecsCanSpawnDecorations = CreateConVar("sm_festive_decorations_halloween_specs_may_spawn", "2",
 		"Whether spectators are allowed to !pumpkin.", _, true, 0.0, true, 2.0);
 }
 
