@@ -349,7 +349,7 @@ public void OnPluginStart()
 	
 	RegConsoleCmd("sm_pumpkin", Cmd_SpawnPumpkin);
 	
-	CreateConVar("sm_festive_decorations_version", PLUGIN_VERSION, "Plugin version.",
+	CreateConVar("sm_festive_decorations_halloween_version", PLUGIN_VERSION, "Plugin version.",
 		FCVAR_DONTRECORD);
 	
 	g_hCvar_MaxDecorations = CreateConVar("sm_festive_decorations_limit", "20",
