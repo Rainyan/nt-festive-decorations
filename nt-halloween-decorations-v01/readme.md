@@ -29,3 +29,7 @@ This SourceMod plugin spawns spooky pumpkins, and also adds a !pumpkin chat comm
 ### License
 
 * Please see the [repo main page's readme document](https://github.com/Rainyan/nt-festive-decorations) for details.
+
+## Example image
+
+![Halloween plugin example](https://github.com/Rainyan/nt-festive-decorations/raw/master/example_images/halloween.jpg "Halloween plugin example")
