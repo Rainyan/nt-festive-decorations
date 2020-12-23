@@ -1,5 +1,7 @@
 "VertexLitGeneric"
 { 
-	"$basetexture" "models/holiday_decorations/xmas/holidaybox" 
- 	"$surfaceprop" "paper"
+	"$basetexture"	"models/holiday_decorations/xmas/holidaybox" 
+ 	"$surfaceprop"	"paper"
+	"$envmap"			"env_cubemap"
+	"$envmapmask"		"models/holiday_decorations/xmas/holidaybox_d"
 }
