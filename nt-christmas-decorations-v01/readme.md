@@ -4,8 +4,6 @@
 
 Made by Rain (plugin code) and John Kaz (the present box model).
 
-Last update: 2020-12-23
-
 This SourceMod plugin spawns seasonal gift boxes, and also adds a sm_gift/sm_present command for spawning some more.
 
 ### Installation
