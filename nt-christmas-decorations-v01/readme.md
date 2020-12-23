@@ -12,7 +12,7 @@ This SourceMod plugin spawns seasonal gift boxes, and also adds a sm_gift/sm_pre
     * https://github.com/softashell/sourcemod-nt-include
 
 * Add all of the "materials" and "models" file paths to your server. If you're using fastdl, be sure to include the files in those folders there, as well.
-    * They can be .bz2'd on fastdl, but only as individual files (no folder structure inside the archive).
+    * They can be .bz2'd on fastdl, but only as individual files (no multiple assets inside the same archive file).
 
 ### Usage
 
