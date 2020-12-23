@@ -4,8 +4,6 @@
 
 Made by Rain (plugin code) and John Kaz (the pumpkin model).
 
-Last update: 2020-12-23
-
 This SourceMod plugin spawns spooky pumpkins, and also adds a !pumpkin chat command for spawning some more.
 
 ### Installation
