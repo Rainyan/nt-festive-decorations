@@ -11,10 +11,10 @@ This SourceMod plugin spawns spooky pumpkins, and also adds a !pumpkin chat comm
 ### Installation
 
 * Compile the source code in "addons". It requires SourceMod 1.7 or newer, and the Neotokyo SM include:
-- https://github.com/softashell/sourcemod-nt-include
+    * https://github.com/softashell/sourcemod-nt-include
 
 * Add the "materials" and "models" paths to your server. If you're using fastdl, be sure to include the files in those folders there, as well.
-- They can be .bz2'd on fastdl, but only as individual files (no folder structure inside the archive).
+    * They can be .bz2'd on fastdl, but only as individual files (no folder structure inside the archive).
 
 ### License
 * Please see the [repo main page's readme document](https://github.com/Rainyan/nt-festive-decorations) for details.
