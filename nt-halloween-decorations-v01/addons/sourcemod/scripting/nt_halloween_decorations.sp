@@ -475,6 +475,10 @@ public void OnMapStart()
 		LightDecorationLocations();
 		CreateTimer(1.0, Cmd_ReLightDecorations, _, TIMER_REPEAT);
 	}
+	
+	for (int i = 0; i < sizeof(_numPerPlayer); ++i) {
+		_numPerPlayer[i] = 0;
+	}
 }
 
 public Action Cmd_ReLightDecorations(Handle timer)
