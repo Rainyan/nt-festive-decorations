@@ -11,5 +11,5 @@ Please see the readmes in the respective sub folders of this repository.
 * Model and texture assets: John Kaz, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 ## Example images
-![Halloween plugin example](https://github.com/Rainyan/nt-festive-decorations/raw/master/example_images/halloween.jpg)
-![Christmas plugin example](https://github.com/Rainyan/nt-festive-decorations/raw/master/example_images/xmas.jpg)
+![Halloween plugin example](https://github.com/Rainyan/nt-festive-decorations/raw/master/example_images/halloween.jpg "Halloween plugin example")
+![Christmas plugin example](https://github.com/Rainyan/nt-festive-decorations/raw/master/example_images/xmas.jpg "Christmas plugin example")
