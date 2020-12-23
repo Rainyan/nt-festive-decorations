@@ -17,4 +17,4 @@ This SourceMod plugin spawns seasonal gift boxes, and also adds a sm_gift/sm_pre
 -- They can be .bz2'd on fastdl, but only as individual files (no folder structure inside the archive).
 
 ### License
-- Please see the [repo main page's readme document](https://github.com/Rainyan/nt-festive-decorations).
+- Please see the [repo main page's readme document](https://github.com/Rainyan/nt-festive-decorations) for details.
