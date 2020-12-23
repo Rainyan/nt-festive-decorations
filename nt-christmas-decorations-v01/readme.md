@@ -16,5 +16,18 @@ This SourceMod plugin spawns seasonal gift boxes, and also adds a sm_gift/sm_pre
 * Add all of the "materials" and "models" file paths to your server. If you're using fastdl, be sure to include the files in those folders there, as well.
     * They can be .bz2'd on fastdl, but only as individual files (no folder structure inside the archive).
 
+### Usage
+
+#### Player commands
+* *sm_gift* (or *!gift* in chat) — Spawn a gift box in the map.
+* *sm_present* (or !present in chat) — Alias of sm_gift.
+
+#### Server cvars
+* *sm_festive_decorations_christmas_version* — Plugin version.
+* *sm_festive_decorations_christmas_lightswitch_speed* — This controls how fast the colored lights spawned by this plugin should change color. Larger value means a slower change of colors. Default: 5. Value range: 1-100.
+* *sm_festive_decorations_christmas_limit* — How many !gifts per round can each player spawn. Limited for performance/fps reasons. Default: 20. Value range: 0 - 1000.
+* *sm_festive_decorations_christmas_specs_may_spawn* — Whether spectators are allowed to !gift. Spectator !gifts are always invisible to living players for gameplay reasons.
+
 ### License
+
 * Please see the [repo main page's readme document](https://github.com/Rainyan/nt-festive-decorations) for details.
