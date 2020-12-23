@@ -453,6 +453,7 @@ public void OnMapStart()
 	}
 	AddFileToDownloadsTable("materials/models/holiday_decorations/xmas/holidaybox.vmt");
 	AddFileToDownloadsTable("materials/models/holiday_decorations/xmas/holidaybox.vtf");
+	AddFileToDownloadsTable("materials/models/holiday_decorations/xmas/holidaybox_d.vtf");
 	
 	decl String:map_name[PLATFORM_MAX_PATH];
 	GetCurrentMap(map_name, sizeof(map_name));
