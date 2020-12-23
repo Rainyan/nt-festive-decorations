@@ -31,3 +31,7 @@ This SourceMod plugin spawns seasonal gift boxes, and also adds a sm_gift/sm_pre
 ### License
 
 * Please see the [repo main page's readme document](https://github.com/Rainyan/nt-festive-decorations) for details.
+
+## Example image
+
+![Christmas plugin example](https://github.com/Rainyan/nt-festive-decorations/raw/master/example_images/xmas.jpg "Christmas plugin example")
