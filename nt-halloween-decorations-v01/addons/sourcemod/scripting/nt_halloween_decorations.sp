@@ -356,7 +356,7 @@ public void OnPluginStart()
 		"How many !pumpkins per person per round max.", _, true, 0.0, true, 1000.0);
 	
 	g_hCvar_SpecsCanSpawnDecorations = CreateConVar("sm_festive_decorations_halloween_specs_may_spawn", "2",
-		"Whether spectators are allowed to !pumpkin.", _, true, 0.0, true, 2.0);
+		"Whether spectators are allowed to !pumpkin. 0: spectators can never spawn !pumpkins, 1: spectators can always spawn !pumpkins visible to all players, 2: spectator !pumpkins are only visible to other spectating players.", _, true, 0.0, true, 2.0);
 }
 
 public Action Cmd_SpawnPumpkin(int client, int argc)

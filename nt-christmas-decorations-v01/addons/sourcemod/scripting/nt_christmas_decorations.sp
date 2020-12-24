@@ -355,7 +355,7 @@ public void OnPluginStart()
 		"How many !gifts per person per round max.", _, true, 0.0, true, 1000.0);
 	
 	g_hCvar_SpecsCanSpawnDecorations = CreateConVar("sm_festive_decorations_christmas_specs_may_spawn", "2",
-		"Whether spectators are allowed to !gift.", _, true, 0.0, true, 2.0);
+		"Whether spectators are allowed to !gift. 0: spectators can never spawn !gifts, 1: spectators can always spawn !gifts visible to all players, 2: spectator !gifts are only visible to other spectating players.", _, true, 0.0, true, 2.0);
 }
 
 public Action Cmd_SpawnGiftbox(int client, int argc)
