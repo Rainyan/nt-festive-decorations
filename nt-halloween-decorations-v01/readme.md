@@ -22,7 +22,7 @@ This SourceMod plugin spawns spooky pumpkins, and also adds a !pumpkin chat comm
 #### Server cvars
 * *sm_festive_decorations_halloween_version* — Plugin version.
 * *sm_festive_decorations_halloween_limit* — How many !pumpkins per round can each player spawn. Limited for performance/fps reasons. Default: 20. Value range: 0 - 1000.
-* *sm_festive_decorations_halloween_specs_may_spawn* — Whether spectators are allowed to !pumpkin. Spectator !pumpkins are always invisible to living players for gameplay reasons.
+* *sm_festive_decorations_halloween_specs_may_spawn* — Whether spectators are allowed to !pumpkin. 0: spectators can never spawn !pumpkins, 1: spectators can always spawn !pumpkins visible to all players, 2: spectator !pumpkins are only visible to other spectating players. Default: 2. Value range: 0-2.
 
 ### License
 
