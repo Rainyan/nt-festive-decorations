@@ -19,7 +19,7 @@
 #include <sdktools_tempents>
 #include <neotokyo>
 
-#define PLUGIN_VERSION "0.3"
+#define PLUGIN_VERSION "0.3.1"
 
 // How many maps are locations defined for
 #define NUM_MAPS 10
@@ -357,6 +357,8 @@ public void OnPluginStart()
 	
 	g_hCvar_SpecsCanSpawnDecorations = CreateConVar("sm_festive_decorations_halloween_specs_may_spawn", "2",
 		"Whether spectators are allowed to !pumpkin. 0: spectators can never spawn !pumpkins, 1: spectators can always spawn !pumpkins visible to all players, 2: spectator !pumpkins are only visible to other spectating players.", _, true, 0.0, true, 2.0);
+	
+	CreateTimer(1.0, Cmd_ReLightDecorations, _, TIMER_REPEAT);
 }
 
 public Action Cmd_SpawnPumpkin(int client, int argc)
@@ -473,7 +475,6 @@ public void OnMapStart()
 		}
 		
 		LightDecorationLocations();
-		CreateTimer(1.0, Cmd_ReLightDecorations, _, TIMER_REPEAT);
 	}
 	
 	for (int i = 0; i < sizeof(_numPerPlayer); ++i) {
