@@ -19,7 +19,7 @@
 #include <sdktools_tempents>
 #include <neotokyo>
 
-#define PLUGIN_VERSION "0.3.1"
+#define PLUGIN_VERSION "0.3.2"
 
 // How many maps are locations defined for
 #define NUM_MAPS 10
