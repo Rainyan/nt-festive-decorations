@@ -6,6 +6,8 @@ Made by Rain (plugin code) and John Kaz (the pumpkin model).
 
 This SourceMod plugin spawns spooky pumpkins, and also adds a !pumpkin chat command for spawning some more.
 
+![Halloween plugin example](https://github.com/Rainyan/nt-festive-decorations/raw/master/example_images/halloween.jpg "Halloween plugin example")
+
 ### Installation
 
 * Compile the source code in "addons". It requires SourceMod 1.7 or newer, and the Neotokyo SM include:
@@ -52,7 +54,7 @@ The file takes the format:
 #### Important things to note about placing the decorations
 
 * Note that the `pos` nodes require the ordering of: `rot` first, and only then `xyz`! Mixing this up will end up using the `xyz` coordinates for rotation, and vice versa.
-* You can have however many `pos` nodes as you like, however please note that the dynamic lighting spawned alongside with the decoration objects has an engine limit of max. 1 per each players' PVS. If you place more than 1 within the same PVS, the lights may visibly turn on/off, which tends to look bad. For more info on what a PVS is, see the (VDC wiki)[https://developer.valvesoftware.com/wiki/PVS]. For quickly visualizing the PVS boundaries, load the map locally, and use the console command `BindToggle P r_lockpvs` to bind temporarily freezing the PVS to P key.
+* You can have however many `pos` nodes as you like, however please note that the dynamic lighting spawned alongside with the decoration objects has an engine limit of max. 1 per each players' PVS. If you place more than 1 within the same PVS, the lights may visibly turn on/off, which tends to look bad. For more info on what a PVS is, see the [VDC wiki](https://developer.valvesoftware.com/wiki/PVS). For quickly visualizing the PVS boundaries, load the map locally, and use the console command `BindToggle P r_lockpvs` (requires `sv_cheats 1`) to bind temporarily freezing the PVS to P key.
 * Since the decorations are read from file in runtime, it's not very efficient. While there isn't an upper limit set to stone, it's recommended to use less than 50 decorations per map.
 
 The `pos` and `rot` nodes accept both integers and floating point values.
@@ -62,7 +64,3 @@ Also note that any models placed in the world origin (0, 0, 0) will be skipped -
 ### License
 
 * Please see the [repo main page's readme document](https://github.com/Rainyan/nt-festive-decorations) for details.
-
-## Example image
-
-![Halloween plugin example](https://github.com/Rainyan/nt-festive-decorations/raw/master/example_images/halloween.jpg "Halloween plugin example")
