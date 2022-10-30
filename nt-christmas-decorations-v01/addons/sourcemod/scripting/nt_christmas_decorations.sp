@@ -3,7 +3,7 @@
 /* TODO FOR FUTURE:
 	- Refactor location data out of code and into a config file for easier location updates.
 	Same with decoration types and other extendable things that are currently hardcoded constant.
-	
+
 	- TE lights actually do not persist (lasts 25 secs or so?), so can remove the cvar time calculations.
 	And just rely on the Cmd_ReLightDecorations repeat timer.
 */
@@ -341,22 +341,22 @@ public void OnPluginStart()
 	if(!HookEventEx("game_round_start", Event_RoundStart)) {
 		SetFailState("Failed to hook event");
 	}
-	
+
 	RegConsoleCmd("sm_gift", Cmd_SpawnGiftbox);
 	RegConsoleCmd("sm_present", Cmd_SpawnGiftbox);
-	
+
 	CreateConVar("sm_festive_decorations_christmas_version", PLUGIN_VERSION, "Plugin version.",
 		FCVAR_DONTRECORD);
-	
+
 	g_hCvar_LightSwitchSpeed = CreateConVar("sm_festive_decorations_christmas_lightswitch_speed", "5", "How fast should randomly changing coloured lights change. Larger value means slower change of colors.",
 		_, true, 1.0, true, 100.0);
-	
+
 	g_hCvar_MaxDecorations = CreateConVar("sm_festive_decorations_christmas_limit", "20",
 		"How many !gifts per person per round max.", _, true, 0.0, true, 1000.0);
-	
+
 	g_hCvar_SpecsCanSpawnDecorations = CreateConVar("sm_festive_decorations_christmas_specs_may_spawn", "2",
 		"Whether spectators are allowed to !gift. 0: spectators can never spawn !gifts, 1: spectators can always spawn !gifts visible to all players, 2: spectator !gifts are only visible to other spectating players.", _, true, 0.0, true, 2.0);
-	
+
 	CreateTimer(1.0, Cmd_ReLightDecorations, _, TIMER_REPEAT);
 }
 
@@ -366,21 +366,21 @@ public Action Cmd_SpawnGiftbox(int client, int argc)
 		ReplyToCommand(client, "This command cannot be executed by the server.");
 		return Plugin_Handled;
 	}
-	
+
 	int team = GetClientTeam(client);
 	bool is_speccing = g_hCvar_SpecsCanSpawnDecorations.IntValue == 1 ? false : (team <= TEAM_SPECTATOR || !IsPlayerAlive(client));
-	
+
 	if (g_hCvar_SpecsCanSpawnDecorations.IntValue == 0 && is_speccing) {
 		PrintToChat(client, "[SM] Spectating players may not spawn decorations!");
 		return Plugin_Handled;
 	}
-	
+
 	if (_numPerPlayer[client] >= g_hCvar_MaxDecorations.IntValue) {
 		PrintToChat(client, "[SM] You can only spawn %d decorations per round!",
 			g_hCvar_MaxDecorations.IntValue);
 		return Plugin_Handled;
 	}
-	
+
 	float eye_pos[3], eye_ang[3], trace_end_pos[3];
 
 	GetClientEyePosition(client, eye_pos);
@@ -389,17 +389,17 @@ public Action Cmd_SpawnGiftbox(int client, int argc)
 	TR_TraceRayFilter(eye_pos, eye_ang, ALL_VISIBLE_CONTENTS,
 		RayType_Infinite, NotHitSelf, client);
 	TR_GetEndPosition(trace_end_pos, INVALID_HANDLE);
-	
+
 	SpawnDecoration(trace_end_pos, eye_ang, is_speccing);
-	
+
 	++_numPerPlayer[client];
-	
+
 	return Plugin_Handled;
 }
 
 bool NotHitSelf(int hitEntity, int contentsMask, int selfEntity)
 {
-	return hitEntity != selfEntity;	
+	return hitEntity != selfEntity;
 }
 
 void SpawnDecoration(const float pos[3], const float ang[3], const bool for_spectators_only = false)
@@ -456,10 +456,10 @@ public void OnMapStart()
 	AddFileToDownloadsTable("materials/models/holiday_decorations/xmas/holidaybox.vmt");
 	AddFileToDownloadsTable("materials/models/holiday_decorations/xmas/holidaybox.vtf");
 	AddFileToDownloadsTable("materials/models/holiday_decorations/xmas/holidaybox_d.vtf");
-	
+
 	decl String:map_name[PLATFORM_MAX_PATH];
 	GetCurrentMap(map_name, sizeof(map_name));
-	
+
 	_currentMapIndex = INVALID_MAP_INDEX;
 	for (int i = 0; i < sizeof(_maps); ++i) {
 		if (StrEqual(map_name, _maps[i])) {
@@ -467,7 +467,7 @@ public void OnMapStart()
 			break;
 		}
 	}
-	
+
 	if (_currentMapIndex != INVALID_MAP_INDEX) {
 		g_hCvar_Timelimit = FindConVar("neo_round_timelimit");
 		g_hCvar_Scorelimit = FindConVar("neo_score_limit");
@@ -479,10 +479,10 @@ public void OnMapStart()
 		} else if (g_hCvar_Chattime == null) {
 			SetFailState("Failed to find mp_chattime");
 		}
-		
+
 		LightDecorationLocations();
 	}
-	
+
 	for (int i = 0; i < sizeof(_numPerPlayer); ++i) {
 		_numPerPlayer[i] = 0;
 	}
@@ -505,7 +505,7 @@ int GetRandomColor_R()
 {
 	static int last_r;
 	static int use_times;
-	
+
 	--use_times;
 	if (use_times <= 0) {
 		use_times = g_hCvar_LightSwitchSpeed.IntValue;
@@ -519,7 +519,7 @@ int GetRandomColor_G()
 {
 	static int last_r;
 	static int use_times;
-	
+
 	--use_times;
 	if (use_times <= 0) {
 		use_times = g_hCvar_LightSwitchSpeed.IntValue;
@@ -533,7 +533,7 @@ int GetRandomColor_B()
 {
 	static int last_r;
 	static int use_times;
-	
+
 	--use_times;
 	if (use_times <= 0) {
 		use_times = g_hCvar_LightSwitchSpeed.IntValue;
@@ -550,7 +550,7 @@ void LightDecorationLocations()
 		if (VectorsEqual(_vec3_zero, _mapPropPositions[_currentMapIndex][location][LOCATION_POS])) {
 			continue;
 		}
-		
+
 		TE_Start("Dynamic Light");
 		TE_WriteVector("m_vecOrigin", _mapPropPositions[_currentMapIndex][location][LOCATION_POS]);
 		TE_WriteFloat("m_fRadius", 180.0);
@@ -572,16 +572,16 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	for (int i = 0; i < sizeof(_numPerPlayer); ++i) {
 		_numPerPlayer[i] = 0;
 	}
-	
+
 	if (_currentMapIndex == -1) {
 		return;
 	}
-	
+
 	for (int location = 0; location < NUM_LOCATIONS; ++location) {
 		if (VectorsEqual(_vec3_zero, _mapPropPositions[_currentMapIndex][location][LOCATION_POS])) {
 			continue;
 		}
-		
+
 		SpawnDecoration(
 			_mapPropPositions[_currentMapIndex][location][LOCATION_POS],
 			_mapPropPositions[_currentMapIndex][location][LOCATION_ANG]);
