@@ -30,12 +30,12 @@ This SourceMod plugin spawns seasonal gift boxes, and also adds a sm_gift/sm_pre
 
 #### Configuring pre-placed decorations
 
-The decoration positions are configured in the `addons/sourcemod/configs/festive_halloween.cfg` config file.
+The decoration positions are configured in the `addons/sourcemod/configs/festive_christmas.cfg` config file.
 
 The file takes the format:
 
 ```kv
-"cfg_festive_halloween"
+"cfg_festive_christmas"
 {
    /* Used for config compatibility. Please don't edit this value manually. */
    "version" 1
