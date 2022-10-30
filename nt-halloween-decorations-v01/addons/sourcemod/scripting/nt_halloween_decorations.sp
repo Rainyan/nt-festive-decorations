@@ -403,7 +403,7 @@ bool NotHitSelf(int hitEntity, int contentsMask, int selfEntity)
 	return hitEntity != selfEntity;	
 }
 
-void SpawnDecoration(const float[3] pos, const float[3] ang, const bool for_spectators_only = false)
+void SpawnDecoration(const float pos[3], const float ang[3], const bool for_spectators_only = false)
 {
 	TE_Start("physicsprop");
 	TE_WriteVector("m_vecOrigin", pos);
@@ -490,7 +490,7 @@ public Action Cmd_ReLightDecorations(Handle timer)
 	return Plugin_Continue;
 }
 
-bool VectorsEqual(const float[3] v1, const float[3] v2)
+bool VectorsEqual(const float v1[3], const float v2[3])
 {
 	return v1[0] == v2[0] && v1[1] == v2[1] && v1[2] == v2[2];
 }
