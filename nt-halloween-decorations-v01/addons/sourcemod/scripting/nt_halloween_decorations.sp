@@ -275,19 +275,6 @@ public void OnMapStart()
 	for (int i = 0; i < sizeof(_numPerPlayer); ++i) {
 		_numPerPlayer[i] = 0;
 	}
-
-#if(0)
-	_currentMapIndex = INVALID_MAP_INDEX;
-	for (int i = 0; i < sizeof(_maps); ++i) {
-		if (StrEqual(map_name, _maps[i])) {
-			_currentMapIndex = i;
-			break;
-		}
-	}
-	if (_currentMapIndex != INVALID_MAP_INDEX) {
-		LightDecorationLocations();
-	}
-#endif
 }
 
 public Action Cmd_ReLightDecorations(Handle timer)
