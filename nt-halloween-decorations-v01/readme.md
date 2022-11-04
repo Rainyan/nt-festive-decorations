@@ -16,7 +16,7 @@ This SourceMod plugin spawns spooky pumpkins, and also adds a !pumpkin chat comm
 * Add the "materials" and "models" paths to your server. If you're using fastdl, be sure to include the files in those folders there, as well.
     * They can be .bz2'd on fastdl, but only as individual files (no multiple assets inside the same archive file).
 
-* Add the  "festive_halloween.cfg" file to the server's `addons/sourcemod/configs` path. If you wish to edit it to include more pre-placed decorations, see the usage details below.
+* Add the  "festive_halloween.cfg" file to the server's `addons/sourcemod/configs` path. If you wish to edit it to include more pre-placed decorations, see the [usage details](#configuring-pre-placed-decorations) below.
 
 ### Usage
 
