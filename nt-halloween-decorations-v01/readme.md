@@ -47,8 +47,8 @@ The file takes the format:
       }
       // you can define multiple "pos" entries here to define multiple positions per map
    }
+   // you can define multiple maps here
 }
-// you can define multiple maps here
 ```
 
 #### Important things to note about placing the decorations
