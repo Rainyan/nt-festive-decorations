@@ -13,7 +13,7 @@
 #include <sdktools_tempents>
 #include <neotokyo>
 
-#define PLUGIN_VERSION "0.4.0"
+#define PLUGIN_VERSION "0.4.1"
 
 // How many different models to randomly choose from
 #define NUM_MODELS 1
@@ -165,8 +165,8 @@ int GetDecorationPositions(const char[] map_name, DataPack out_dp = null)
 			++num_positions;
 			if (out_dp != null)
 			{
-				out_dp.WriteFloatArray(rot, sizeof(rot));
-				out_dp.WriteFloatArray(xyz, sizeof(xyz));
+				Dp_WriteFloatArray(out_dp, rot, sizeof(rot));
+				Dp_WriteFloatArray(out_dp, xyz, sizeof(xyz));
 #if DEBUG
 				PrintToServer("Wrote rot: %f %f %f", rot[0], rot[1], rot[2]);
 				PrintToServer("Wrote xyz: %f %f %f", xyz[0], xyz[1], xyz[2]);
@@ -183,8 +183,8 @@ int GetDecorationPositions(const char[] map_name, DataPack out_dp = null)
 				++num_positions;
 				if (out_dp != null)
 				{
-					out_dp.WriteFloatArray(rot, sizeof(rot));
-					out_dp.WriteFloatArray(xyz, sizeof(xyz));
+					Dp_WriteFloatArray(out_dp, rot, sizeof(rot));
+					Dp_WriteFloatArray(out_dp, xyz, sizeof(xyz));
 #if DEBUG
 					PrintToServer("Wrote rot: %f %f %f", rot[0], rot[1], rot[2]);
 					PrintToServer("Wrote xyz: %f %f %f", xyz[0], xyz[1], xyz[2]);
@@ -196,6 +196,32 @@ int GetDecorationPositions(const char[] map_name, DataPack out_dp = null)
 
 	delete kv;
 	return num_positions;
+}
+
+static void Dp_ReadFloatArray(DataPack source, float[] buffer, int count)
+{
+// Because DataPack.ReadFloatArray is not available in SourceMod < 1.11
+#if SOURCEMOD_V_MAJOR <= 1 && SOURCEMOD_V_MINOR <= 10
+	for (int i = 0; i < count; ++i)
+	{
+		buffer[i] = source.ReadFloat();
+	}
+#else
+	source.ReadFloatArray(buffer, count);
+#endif
+}
+
+static void Dp_WriteFloatArray(DataPack target, const float[] arr, int count, bool insert = false)
+{
+// Because DataPack.ReadFloatArray is not available in SourceMod < 1.11
+#if SOURCEMOD_V_MAJOR <= 1 && SOURCEMOD_V_MINOR <= 10
+	for (int i = 0; i < count; ++i)
+	{
+		target.WriteFloat(arr[i], insert);
+	}
+#else
+	target.WriteFloatArray(arr, count, insert);
+#endif
 }
 
 void SpawnDecoration(const float pos[3], const float ang[3], const bool for_spectators_only = false)
@@ -350,8 +376,9 @@ void LightDecorationLocations()
 	float time = (g_hCvar_Scorelimit.IntValue * 2 - 1) * (g_hCvar_Timelimit.FloatValue * 60 + g_hCvar_Chattime.FloatValue);
 	for (int i = 0; i < _num_decoration_positions; ++i)
 	{
-		_dp_decoration_positions.ReadFloatArray(xyz, sizeof(xyz)); // skip angles
-		_dp_decoration_positions.ReadFloatArray(xyz, sizeof(xyz));
+		Dp_ReadFloatArray(_dp_decoration_positions, xyz, sizeof(xyz)); // twice because skip angles
+		Dp_ReadFloatArray(_dp_decoration_positions, xyz, sizeof(xyz));
+
 		TE_Start("Dynamic Light");
 		TE_WriteVector("m_vecOrigin", xyz);
 		TE_WriteFloat("m_fRadius", 180.0);
@@ -379,8 +406,8 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 		_dp_decoration_positions.Reset();
 		for (int i = 0; i < _num_decoration_positions; ++i)
 		{
-			_dp_decoration_positions.ReadFloatArray(rot, sizeof(rot));
-			_dp_decoration_positions.ReadFloatArray(xyz, sizeof(xyz));
+			Dp_ReadFloatArray(_dp_decoration_positions, rot, sizeof(rot));
+			Dp_ReadFloatArray(_dp_decoration_positions, xyz, sizeof(xyz));
 			SpawnDecoration(xyz, rot);
 		}
 	}
