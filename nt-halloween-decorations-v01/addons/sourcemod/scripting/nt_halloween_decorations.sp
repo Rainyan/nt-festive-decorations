@@ -7,9 +7,6 @@
 
 	- Fix pumpkin UVs such that it self illuminates (black.vmt or similar, see assets).
 
-	- Refactor location data out of code and into a config file for easier location updates.
-	Same with decoration types and other extendable things that are currently hardcoded constant.
-
 	- TE lights actually do not persist (lasts 25 secs or so?), so can remove the cvar time calculations.
 	And just rely on the Cmd_ReLightDecorations repeat timer.
 */
