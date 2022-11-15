@@ -293,7 +293,7 @@ static void Dp_ReadFloatArray(DataPack source, float[] buffer, int count)
 // Declared stock for backwards compatibility; potentially unused parameters
 static stock void Dp_WriteFloatArray(DataPack target, const float[] arr, int count, bool insert = false)
 {
-// Because DataPack.ReadFloatArray is not available in SourceMod < 1.11
+// Because DataPack.WriteFloatArray is not available in SourceMod < 1.11
 #if SOURCEMOD_V_MAJOR <= 1 && SOURCEMOD_V_MINOR <= 10
 	for (int i = 0; i < count; ++i)
 	{
