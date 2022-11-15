@@ -51,7 +51,7 @@ static int _numPerPlayer[NEO_MAX_PLAYERS + 1];
 public Plugin myinfo = {
 	name = "NT Halloween Decorations",
 	description = "Spawn client-side festive objects in the maps.",
-	author = "Rain",
+	author = "code: Rain, 3D models & textures: John Kaz",
 	version = PLUGIN_VERSION,
 	url = "https://github.com/Rainyan/nt-festive-decorations"
 };
