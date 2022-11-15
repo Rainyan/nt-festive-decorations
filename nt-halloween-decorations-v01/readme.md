@@ -10,7 +10,7 @@ This SourceMod plugin spawns spooky pumpkins, and also adds a !pumpkin chat comm
 
 ### Installation
 
-* Compile the source code in "addons". It requires SourceMod 1.7 or newer, and the Neotokyo SM include:
+* Compile the source code in "addons". It requires SourceMod 1.8 or newer, and the Neotokyo SM include:
     * https://github.com/softashell/sourcemod-nt-include
 
 * Add the "materials" and "models" paths to your server. If you're using fastdl, be sure to include the files in those folders there, as well.
