@@ -10,7 +10,7 @@
 #include <sdktools_tempents>
 #include <neotokyo>
 
-#define PLUGIN_VERSION "0.4.1"
+#define PLUGIN_VERSION "0.5.0"
 
 // How many different models to randomly choose from
 #define NUM_MODELS 1
@@ -40,6 +40,8 @@ ConVar g_hCvar_Timelimit = null, g_hCvar_Scorelimit = null, g_hCvar_Chattime = n
 
 static int _numPerPlayer[NEO_MAX_PLAYERS + 1];
 
+Handle _timer_relight = INVALID_HANDLE;
+
 public Plugin myinfo = {
 	name = "NT Christmas Decorations",
 	description = "Spawn client-side festive objects in the maps.",
@@ -60,16 +62,24 @@ public void OnPluginStart()
 	CreateConVar("sm_festive_decorations_christmas_version", PLUGIN_VERSION, "Plugin version.",
 		FCVAR_DONTRECORD);
 
-	g_hCvar_LightSwitchSpeed = CreateConVar("sm_festive_decorations_christmas_lightswitch_speed", "5", "How fast should randomly changing coloured lights change. Larger value means slower change of colors.",
-		_, true, 1.0, true, 100.0);
+	g_hCvar_LightSwitchSpeed = CreateConVar("sm_festive_decorations_christmas_lightswitch_secs", "5", "How many seconds to wait between changing the randomly chosen christmas light effect colors.",
+		_, true, 1.0, true, 180.0);
+	g_hCvar_LightSwitchSpeed.AddChangeHook(LightSwitchSpeedChanged);
 
 	g_hCvar_MaxDecorations = CreateConVar("sm_festive_decorations_christmas_limit", "20",
 		"How many !gifts per person per round max.", _, true, 0.0, true, 1000.0);
 
 	g_hCvar_SpecsCanSpawnDecorations = CreateConVar("sm_festive_decorations_christmas_specs_may_spawn", "2",
 		"Whether spectators are allowed to !gift. 0: spectators can never spawn !gifts, 1: spectators can always spawn !gifts visible to all players, 2: spectator !gifts are only visible to other spectating players.", _, true, 0.0, true, 2.0);
+}
 
-	CreateTimer(1.0, Cmd_ReLightDecorations, _, TIMER_REPEAT);
+public void LightSwitchSpeedChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	float speed = StringToFloat(newValue);
+	float min;
+	if (g_hCvar_LightSwitchSpeed.GetBounds(ConVarBound_Lower, min) && speed >= min) {
+		SetLightSwitchSpeed(speed);
+	}
 }
 
 public Action Cmd_SpawnGiftbox(int client, int argc)
@@ -264,16 +274,28 @@ void SpawnDecoration(const float pos[3], const float ang[3], const bool for_spec
 
 public void OnConfigsExecuted()
 {
-	g_hCvar_Timelimit = FindConVar("neo_round_timelimit");
-	g_hCvar_Scorelimit = FindConVar("neo_score_limit");
-	g_hCvar_Chattime = FindConVar("mp_chattime");
 	if (g_hCvar_Timelimit == null) {
-		SetFailState("Failed to find neo_round_timelimit");
-	} else if (g_hCvar_Scorelimit == null) {
-		SetFailState("Failed to find neo_score_limit");
-	} else if (g_hCvar_Chattime == null) {
-		SetFailState("Failed to find mp_chattime");
+		g_hCvar_Timelimit = FindConVar("neo_round_timelimit");
 	}
+	if (g_hCvar_Scorelimit == null) {
+		g_hCvar_Scorelimit = FindConVar("neo_score_limit");
+	}
+	if (g_hCvar_Chattime == null) {
+		g_hCvar_Chattime = FindConVar("mp_chattime");
+	}
+	if (g_hCvar_Timelimit == null || g_hCvar_Scorelimit == null || g_hCvar_Chattime == null) {
+		SetFailState("Failed to find cvar(s)");
+	}
+
+	SetLightSwitchSpeed(g_hCvar_LightSwitchSpeed.FloatValue);
+}
+
+void SetLightSwitchSpeed(float speed)
+{
+	if (_timer_relight != INVALID_HANDLE) {
+		delete _timer_relight;
+	}
+	_timer_relight = CreateTimer(speed, Cmd_ReLightDecorations, _, TIMER_REPEAT);
 }
 
 public void OnMapStart()
@@ -323,46 +345,13 @@ bool VectorsEqual(const float v1[3], const float v2[3])
 	return v1[0] == v2[0] && v1[1] == v2[1] && v1[2] == v2[2];
 }
 
-int GetRandomColor_R()
+int RandomRGBComponent()
 {
-	static int last_r;
-	static int use_times;
-
-	--use_times;
-	if (use_times <= 0) {
-		use_times = g_hCvar_LightSwitchSpeed.IntValue;
-		SetRandomSeed(GetGameTickCount() + 1);
-		last_r = GetRandomInt(0, 255);
-	}
-	return last_r;
-}
-
-int GetRandomColor_G()
-{
-	static int last_r;
-	static int use_times;
-
-	--use_times;
-	if (use_times <= 0) {
-		use_times = g_hCvar_LightSwitchSpeed.IntValue;
-		SetRandomSeed(GetGameTickCount() + 2);
-		last_r = GetRandomInt(0, 255);
-	}
-	return last_r;
-}
-
-int GetRandomColor_B()
-{
-	static int last_r;
-	static int use_times;
-
-	--use_times;
-	if (use_times <= 0) {
-		use_times = g_hCvar_LightSwitchSpeed.IntValue;
-		SetRandomSeed(GetGameTickCount() + 3);
-		last_r = GetRandomInt(0, 255);
-	}
-	return last_r;
+	// Using additional seed because this gets called thrice per tick (r+g+b)
+	static int seed = 0;
+	SetRandomSeed(GetGameTickCount() + seed);
+	seed = (seed + 1) % 3;
+	return GetRandomInt(0, 255);
 }
 
 void LightDecorationLocations()
@@ -385,9 +374,9 @@ void LightDecorationLocations()
 		TE_Start("Dynamic Light");
 		TE_WriteVector("m_vecOrigin", xyz);
 		TE_WriteFloat("m_fRadius", 180.0);
-		TE_WriteNum("r", GetRandomColor_R());
-		TE_WriteNum("g", GetRandomColor_G());
-		TE_WriteNum("b", GetRandomColor_B());
+		TE_WriteNum("r", RandomRGBComponent());
+		TE_WriteNum("g", RandomRGBComponent());
+		TE_WriteNum("b", RandomRGBComponent());
 		TE_WriteNum("exponent", 2);
 		TE_WriteFloat("m_fTime", time);
 		TE_WriteFloat("m_fDecay", 1.0);

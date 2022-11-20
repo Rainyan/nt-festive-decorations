@@ -21,12 +21,12 @@ This SourceMod plugin spawns seasonal gift boxes, and also adds a sm_gift/sm_pre
 ### Usage
 
 #### Player commands
-* *sm_gift* (or *!gift* in chat) — Spawn a gift box in the map.
-* *sm_present* (or !present in chat) — Alias of sm_gift.
+* `sm_gift` (or `!gift` in chat) — Spawn a gift box in the map.
+* `sm_present` (or `!present` in chat) — Alias of `sm_gift`.
 
 #### Server cvars
 * *sm_festive_decorations_christmas_version* — Plugin version.
-* *sm_festive_decorations_christmas_lightswitch_speed* — This controls how fast the colored lights spawned by this plugin should change color. Larger value means a slower change of colors. Default: 5. Value range: 1-100.
+* *sm_festive_decorations_christmas_lightswitch_secs* — How many seconds to wait between changing the randomly chosen christmas light effect colors. Default: 5. Value range: 1-180.
 * *sm_festive_decorations_christmas_limit* — How many !gifts per round can each player spawn. Limited for performance/fps reasons. Default: 20. Value range: 0 - 1000.
 * *sm_festive_decorations_christmas_specs_may_spawn* — Whether spectators are allowed to !gift. 0: spectators can never spawn !gifts, 1: spectators can always spawn !gifts visible to all players, 2: spectator !gifts are only visible to other spectating players. Default: 2. Value range: 0-2.
 
