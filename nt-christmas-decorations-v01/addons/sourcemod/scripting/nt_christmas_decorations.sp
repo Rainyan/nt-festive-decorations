@@ -121,7 +121,7 @@ int GetDecorationPositions(const char[] map_name, DataPack out_dp = null)
 #endif
 
 	char path[PLATFORM_MAX_PATH];
-	if (BuildPath(Path_SM, path, sizeof(path), "configs/festive_halloween.cfg") < 0)
+	if (BuildPath(Path_SM, path, sizeof(path), "configs/festive_christmas.cfg") < 0)
 	{
 		ThrowError("Failed to build path");
 	}
@@ -130,7 +130,7 @@ int GetDecorationPositions(const char[] map_name, DataPack out_dp = null)
 		ThrowError("Config path doesn't exist: \"%s\"", path);
 	}
 
-	KeyValues kv = new KeyValues("cfg_festive_halloween");
+	KeyValues kv = new KeyValues("cfg_festive_christmas");
 	if (!kv.ImportFromFile(path))
 	{
 		delete kv;
