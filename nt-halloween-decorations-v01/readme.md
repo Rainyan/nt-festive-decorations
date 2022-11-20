@@ -21,7 +21,7 @@ This SourceMod plugin spawns spooky pumpkins, and also adds a !pumpkin chat comm
 ### Usage
 
 #### Player commands
-* *sm_pumpkin* (or *!pumpkin* in chat) — Spawns a pumpkin in the map where the player is aiming.
+* `sm_pumpkin` (or `!pumpkin` in chat) — Spawns a pumpkin in the map where the player is aiming.
 
 #### Server cvars
 * *sm_festive_decorations_halloween_version* — Plugin version.
