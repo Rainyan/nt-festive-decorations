@@ -21,8 +21,8 @@ This SourceMod plugin spawns seasonal gift boxes, and also adds a sm_gift/sm_pre
 ### Usage
 
 #### Player commands
-* *sm_gift* (or *!gift* in chat) — Spawn a gift box in the map.
-* *sm_present* (or !present in chat) — Alias of sm_gift.
+* `sm_gift` (or `!gift` in chat) — Spawn a gift box in the map.
+* `sm_present` (or `!present` in chat) — Alias of `sm_gift`.
 
 #### Server cvars
 * *sm_festive_decorations_christmas_version* — Plugin version.
