@@ -10,7 +10,7 @@ This SourceMod plugin spawns seasonal gift boxes, and also adds a sm_gift/sm_pre
 
 ### Installation
 
-* Compile the source code in "addons". It requires SourceMod 1.7 or newer, and the Neotokyo SM include:
+* Compile the source code in "addons". It requires SourceMod 1.8 or newer, and the Neotokyo SM include:
     * https://github.com/softashell/sourcemod-nt-include
 
 * Add all of the "materials" and "models" file paths to your server. If you're using fastdl, be sure to include the files in those folders there, as well.

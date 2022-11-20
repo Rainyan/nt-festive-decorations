@@ -1,9 +1,6 @@
 #pragma semicolon 1
 
 /* TODO FOR FUTURE:
-	- Refactor location data out of code and into a config file for easier location updates.
-	Same with decoration types and other extendable things that are currently hardcoded constant.
-
 	- TE lights actually do not persist (lasts 25 secs or so?), so can remove the cvar time calculations.
 	And just rely on the Cmd_ReLightDecorations repeat timer.
 */
@@ -13,7 +10,7 @@
 #include <sdktools_tempents>
 #include <neotokyo>
 
-#define PLUGIN_VERSION "0.4.0"
+#define PLUGIN_VERSION "0.4.1"
 
 // How many different models to randomly choose from
 #define NUM_MODELS 1
@@ -46,7 +43,7 @@ static int _numPerPlayer[NEO_MAX_PLAYERS + 1];
 public Plugin myinfo = {
 	name = "NT Christmas Decorations",
 	description = "Spawn client-side festive objects in the maps.",
-	author = "Rain",
+	author = "code: Rain, 3D models & textures: John Kaz",
 	version = PLUGIN_VERSION,
 	url = "https://github.com/Rainyan/nt-festive-decorations"
 };
@@ -124,7 +121,7 @@ int GetDecorationPositions(const char[] map_name, DataPack out_dp = null)
 #endif
 
 	char path[PLATFORM_MAX_PATH];
-	if (BuildPath(Path_SM, path, sizeof(path), "configs/festive_halloween.cfg") < 0)
+	if (BuildPath(Path_SM, path, sizeof(path), "configs/festive_christmas.cfg") < 0)
 	{
 		ThrowError("Failed to build path");
 	}
@@ -133,7 +130,7 @@ int GetDecorationPositions(const char[] map_name, DataPack out_dp = null)
 		ThrowError("Config path doesn't exist: \"%s\"", path);
 	}
 
-	KeyValues kv = new KeyValues("cfg_festive_halloween");
+	KeyValues kv = new KeyValues("cfg_festive_christmas");
 	if (!kv.ImportFromFile(path))
 	{
 		delete kv;
@@ -165,8 +162,8 @@ int GetDecorationPositions(const char[] map_name, DataPack out_dp = null)
 			++num_positions;
 			if (out_dp != null)
 			{
-				out_dp.WriteFloatArray(rot, sizeof(rot));
-				out_dp.WriteFloatArray(xyz, sizeof(xyz));
+				Dp_WriteFloatArray(out_dp, rot, sizeof(rot));
+				Dp_WriteFloatArray(out_dp, xyz, sizeof(xyz));
 #if DEBUG
 				PrintToServer("Wrote rot: %f %f %f", rot[0], rot[1], rot[2]);
 				PrintToServer("Wrote xyz: %f %f %f", xyz[0], xyz[1], xyz[2]);
@@ -183,8 +180,8 @@ int GetDecorationPositions(const char[] map_name, DataPack out_dp = null)
 				++num_positions;
 				if (out_dp != null)
 				{
-					out_dp.WriteFloatArray(rot, sizeof(rot));
-					out_dp.WriteFloatArray(xyz, sizeof(xyz));
+					Dp_WriteFloatArray(out_dp, rot, sizeof(rot));
+					Dp_WriteFloatArray(out_dp, xyz, sizeof(xyz));
 #if DEBUG
 					PrintToServer("Wrote rot: %f %f %f", rot[0], rot[1], rot[2]);
 					PrintToServer("Wrote xyz: %f %f %f", xyz[0], xyz[1], xyz[2]);
@@ -196,6 +193,38 @@ int GetDecorationPositions(const char[] map_name, DataPack out_dp = null)
 
 	delete kv;
 	return num_positions;
+}
+
+static void Dp_ReadFloatArray(DataPack source, float[] buffer, int count)
+{
+// Because DataPack.ReadFloatArray is not available in SourceMod < 1.11
+#if SOURCEMOD_V_MAJOR <= 1 && SOURCEMOD_V_MINOR <= 10
+	for (int i = 0; i < count; ++i)
+	{
+		buffer[i] = source.ReadFloat();
+	}
+#else
+	source.ReadFloatArray(buffer, count);
+#endif
+}
+
+// Declared stock for backwards compatibility; potentially unused parameters
+static stock void Dp_WriteFloatArray(DataPack target, const float[] arr, int count, bool insert = false)
+{
+// Because DataPack.WriteFloatArray is not available in SourceMod < 1.11
+#if SOURCEMOD_V_MAJOR <= 1 && SOURCEMOD_V_MINOR <= 10
+	for (int i = 0; i < count; ++i)
+	{
+// Because the insert parameter is not available in SourceMod < 1.10
+#if SOURCEMOD_V_MINOR <= 9
+		target.WriteFloat(arr[i]);
+#else
+		target.WriteFloat(arr[i], insert);
+#endif
+	}
+#else
+	target.WriteFloatArray(arr, count, insert);
+#endif
 }
 
 void SpawnDecoration(const float pos[3], const float ang[3], const bool for_spectators_only = false)
@@ -350,8 +379,9 @@ void LightDecorationLocations()
 	float time = (g_hCvar_Scorelimit.IntValue * 2 - 1) * (g_hCvar_Timelimit.FloatValue * 60 + g_hCvar_Chattime.FloatValue);
 	for (int i = 0; i < _num_decoration_positions; ++i)
 	{
-		_dp_decoration_positions.ReadFloatArray(xyz, sizeof(xyz)); // skip angles
-		_dp_decoration_positions.ReadFloatArray(xyz, sizeof(xyz));
+		Dp_ReadFloatArray(_dp_decoration_positions, xyz, sizeof(xyz)); // twice because skip angles
+		Dp_ReadFloatArray(_dp_decoration_positions, xyz, sizeof(xyz));
+
 		TE_Start("Dynamic Light");
 		TE_WriteVector("m_vecOrigin", xyz);
 		TE_WriteFloat("m_fRadius", 180.0);
@@ -379,8 +409,8 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 		_dp_decoration_positions.Reset();
 		for (int i = 0; i < _num_decoration_positions; ++i)
 		{
-			_dp_decoration_positions.ReadFloatArray(rot, sizeof(rot));
-			_dp_decoration_positions.ReadFloatArray(xyz, sizeof(xyz));
+			Dp_ReadFloatArray(_dp_decoration_positions, rot, sizeof(rot));
+			Dp_ReadFloatArray(_dp_decoration_positions, xyz, sizeof(xyz));
 			SpawnDecoration(xyz, rot);
 		}
 	}
