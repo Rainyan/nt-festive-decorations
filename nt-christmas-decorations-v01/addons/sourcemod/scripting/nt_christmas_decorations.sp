@@ -347,7 +347,7 @@ bool VectorsEqual(const float v1[3], const float v2[3])
 
 int RandomRGBComponent()
 {
-	// Using additional seed because this gets called thrice per tick (r+g+b)
+	// Using additional seed because this gets called thrice "per tick", for the specific tick when it is called (r+g+b)
 	static int seed = 0;
 	SetRandomSeed(GetGameTickCount() + seed);
 	seed = (seed + 1) % 3;
