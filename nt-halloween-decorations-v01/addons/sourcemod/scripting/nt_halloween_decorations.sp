@@ -16,7 +16,7 @@
 #include <sdktools_tempents>
 #include <neotokyo>
 
-#define PLUGIN_VERSION "0.4.1"
+#define PLUGIN_VERSION "0.4.2"
 
 // How many different models to randomly choose from
 #define NUM_MODELS 1
@@ -206,19 +206,23 @@ void SpawnDecoration(const float pos[3], const float ang[3], const bool for_spec
 	TE_WriteVector("m_vecVelocity", _vec3_zero);
 	TE_WriteNum("m_nModelIndex", _model_indices[GetRandomInt(0, sizeof(_model_indices) - 1)]);
 	TE_WriteNum("m_nFlags", 0);
+	int recipients[NEO_MAX_PLAYERS];
+	int num_recipients;
 	if (!for_spectators_only) {
-		TE_SendToAll(0.0);
-	} else {
-		int spectators[NEO_MAX_PLAYERS];
-		int num_spectators;
 		for (int client = 1; client <= MaxClients; ++client) {
-			if (IsClientInGame(client) && (!IsPlayerAlive(client) || GetClientTeam(client) <= TEAM_SPECTATOR)) {
-				spectators[num_spectators++] = client;
+			if (IsClientInGame(client) && !IsClientSourceTV(client) && !IsClientReplay(client)) {
+				recipients[num_recipients++] = client;
 			}
 		}
-		if (num_spectators != 0) {
-			TE_Send(spectators, num_spectators, 0.0);
+	} else {
+		for (int client = 1; client <= MaxClients; ++client) {
+			if (IsClientInGame(client) && (!IsPlayerAlive(client) || GetClientTeam(client) <= TEAM_SPECTATOR) && !IsClientSourceTV(client) && !IsClientReplay(client)) {
+				recipients[num_recipients++] = client;
+			}
 		}
+	}
+	if (num_recipients != 0) {
+		TE_Send(recipients, num_recipients, 0.0);
 	}
 }
 
