@@ -10,7 +10,7 @@
 #include <sdktools_tempents>
 #include <neotokyo>
 
-#define PLUGIN_VERSION "0.5.1"
+#define PLUGIN_VERSION "0.5.2"
 
 // How many different models to randomly choose from
 #define NUM_MODELS 1
@@ -165,11 +165,13 @@ int GetDecorationPositions(const char[] map_name, DataPack out_dp = null)
 	{
 		float rot[3];
 		float xyz[3];
-		kv.GetVector("rot", rot, _vec3_zero);
-		kv.GetVector("xyz", xyz, _vec3_zero);
-		if (!VectorsEqual(xyz, _vec3_zero))
-		{
-			++num_positions;
+		do {
+			kv.GetVector("rot", rot, _vec3_zero);
+			kv.GetVector("xyz", xyz, _vec3_zero);
+			if (VectorsEqual(xyz, _vec3_zero))
+			{
+				break;
+			}
 			if (out_dp != null)
 			{
 				Dp_WriteFloatArray(out_dp, rot, sizeof(rot));
@@ -179,26 +181,8 @@ int GetDecorationPositions(const char[] map_name, DataPack out_dp = null)
 				PrintToServer("Wrote xyz: %f %f %f", xyz[0], xyz[1], xyz[2]);
 #endif
 			}
-			while (kv.GotoNextKey())
-			{
-				kv.GetVector("rot", rot, _vec3_zero);
-				kv.GetVector("xyz", xyz, _vec3_zero);
-				if (VectorsEqual(xyz, _vec3_zero))
-				{
-					break;
-				}
-				++num_positions;
-				if (out_dp != null)
-				{
-					Dp_WriteFloatArray(out_dp, rot, sizeof(rot));
-					Dp_WriteFloatArray(out_dp, xyz, sizeof(xyz));
-#if DEBUG
-					PrintToServer("Wrote rot: %f %f %f", rot[0], rot[1], rot[2]);
-					PrintToServer("Wrote xyz: %f %f %f", xyz[0], xyz[1], xyz[2]);
-#endif
-				}
-			}
-		}
+			++num_positions;
+		} while (kv.GotoNextKey());
 	}
 
 	delete kv;
