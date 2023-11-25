@@ -8,7 +8,10 @@ If you are a server host, and have made additional decoration position configs (
 
 ## How to use
 
-Please see the readmes in the respective sub folders of this repository.
+Please see the readmes in the respective sub folders of this repository:
+
+* [Halloween season](nt-halloween-decorations)
+* [Christmas season](nt-christmas-decorations)
 
 ## License
 
