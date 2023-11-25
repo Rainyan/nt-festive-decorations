@@ -1,5 +1,9 @@
 # nt_halloween_decorations
 
+## Help wanted
+
+If you are a server host, and have made additional decoration position configs (either improving the current ones, or creating configs for more maps), please consider [submitting a patch](https://github.com/Rainyan/nt-festive-decorations/issues/10) to add them to this project!
+
 ## A Halloween Decorations plugin for Neotokyo.
 
 Made by Rain (plugin code) and John Kaz (the pumpkin model).
