@@ -2,6 +2,10 @@
 
 Server plugins for Neotokyo. Spawn client-side festive objects in the maps.
 
+## Help wanted
+
+If you are a server host, and have made additional decoration position configs (either improving the current ones, or creating configs for more maps), please consider [submitting a patch](https://github.com/Rainyan/nt-festive-decorations/issues/10) to add them to this project!
+
 ## How to use
 
 Please see the readmes in the respective sub folders of this repository.
